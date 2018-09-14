@@ -1,0 +1,9 @@
+- hosts: clients
+  sudo: yes
+  tasks:
+#  Stop docker container
+  - name: Stop image
+    docker_container:
+      name: demo
+      image: jkdc/flask-demo-app-v1
+      state: stopped

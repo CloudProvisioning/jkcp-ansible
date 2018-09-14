@@ -1,0 +1,53 @@
+- hosts: clients
+  sudo: yes
+  tasks:
+# Setup system
+  - name: 'Update apt-get'
+    apt: 
+        update_cache: yes
+  - name: 'Uninstall old docker version (if they exist)'
+    apt: name={{item}} state=absent
+    with_items:
+         - docker
+         - docker-engine
+         - docker.io
+    update_cache: yes
+  - name: 'Install packages to allow apt to use a repository over HTTPS'
+    apt: name={{item}} state=present
+    with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+    - python-pip
+    - python-dev
+    - build-essential
+  - name: Add Docker’s official GPG key
+    apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+  - name: 'Set up the stable repository'
+    apt_repository:
+        repo: 'deb https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable'
+        state: 'present'
+        update_cache: 'yes'
+  - name: 'Install docker-ce'
+    apt: 
+        name: docker-ce 
+        state: present
+  - name: "Install docker-py module"
+    pip:
+      name: docker
+      state: forcereinstall
+# Pull docker image and run it in detached state
+  - name: Pull image
+    docker_image:
+        name: jkdc/flask-demo-app-v1
+  - name: Run image
+    docker_container:
+      name: demo
+      image: jkdc/flask-demo-app-v1
+      state: started
+      detach: yes
+      ports:
+        - "8000:8000"

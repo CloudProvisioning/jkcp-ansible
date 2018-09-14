@@ -1,0 +1,12 @@
+- hosts: clients
+  sudo: yes
+  tasks:
+#  Start docker container
+  - name: Run image
+    docker_container:
+      name: demo
+      image: jkdc/flask-demo-app-v1
+      state: started
+      detach: yes
+      ports:
+        - "8000:8000"

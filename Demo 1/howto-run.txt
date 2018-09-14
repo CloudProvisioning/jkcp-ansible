@@ -1,0 +1,34 @@
+On target machine (Ubuntu Server 18.04):
+// setup
+	sudo apt install python-minimal
+
+On control machine (Ubuntu Client 18.04):
+// setup
+// ssh
+    sudo apt install ssh (if necessary)
+    ssh-keygen
+    ssh-copy-id acp_ubuntu_server@acp_ubuntu_server
+
+// optional: check ssh
+    ssh acp_ubuntu_server@acp_ubuntu_server
+
+// ansible
+	sudo apt install ansible
+    cp /etc/ansible ~/project-name
+    
+// set 'inventory = hosts' in ansible.cfg
+// add to hosts [clients] block with target hosts
+
+// optional: check for available hosts
+    ansible -m ping clients
+
+// place playbooks to ~/project-name/roles
+
+// do remote setup and start container
+	ansible-playbook roles/docker_setup_demo.yml --extra-vars "ansible_sudo_pass=1234"
+
+// do remote stop running container
+	ansible-playbook roles/docker_stop_demo.yml --extra-vars "ansible_sudo_pass=1234"
+
+//do remote start stopped container
+	ansible-playbook roles/docker_start_demo.yml --extra-vars "ansible_sudo_pass=1234"
