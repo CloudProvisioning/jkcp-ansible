@@ -1,0 +1,10 @@
+---
+- hosts: masters, nodes
+  gather_facts: False
+  sudo: yes
+
+  pre_tasks:
+  - name: install python
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+    register: output
+    changed_when: output.stdout != ""

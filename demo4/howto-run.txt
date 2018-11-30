@@ -1,0 +1,10 @@
+On control machine (Ubuntu is recommended for control machine and nodes, tested on 18.04):
+// go to tasks directory
+// set in hosts file master nodes and slave nodes ip adresses or host names
+// set inside keys-forward.yml playbook remote user name (recommended to have same for each target host)
+// run playbooks with command:
+    ansible-playbook <playbook-name>.yml
+// in next order
+	install-python.yml // install python on hosts, required for Ansible
+    keys-forward.yml // forward ssh keys for access to nodes
+    docker-kubernetes-install.yml // install Docker and Kubernetes on hosts
